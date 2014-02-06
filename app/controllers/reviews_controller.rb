@@ -1,20 +1,21 @@
 class ReviewsController < ApplicationController
   before_filter :load_product
-  before_filter :ensure_logged_in :only => [:edit, :create, :show, :update, :destroy]
+  dbefore_filter :ensure_logged_in, :only=>[:edit, :create, :show, :update, :destroy]
+
   
   def show
     @review = Review.find(params[:id])
   end
 
   def create
-  	@review = @product.reviews.build(review_params)
-  	@review.user_id = current_user.id
-  
-  	if @review.save
-  		redirect_to products_path
-  	else
-  		render :action => :show
-  	end
+    @review = @product.reviews.build(review_params)
+    @review.user_id = current_user.id
+
+    if @review.save
+      redirect_to products_path, notice: 'Review created succesfuly'
+    else
+      render :action => :show
+    end
   end
   
   def new
@@ -27,6 +28,8 @@ class ReviewsController < ApplicationController
   	@review = Review.find(params[:id])
   	@review.destroy
   end
+
+  
 
   private
   def review_params
